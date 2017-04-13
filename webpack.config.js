@@ -3,9 +3,7 @@ var path = require('path');
 
 module.exports = {
   entry: [
-    'script-loader!jquery/dist/jquery.min.js',
-    'script-loader!foundation-sites/dist/js/foundation.min.js',
-    './app/app.jsx'
+    'script-loader!jquery/dist/jquery.min.js', 'script-loader!foundation-sites/dist/js/foundation.min.js', './app/app.jsx'
   ],
   externals: {
     jquery: 'jQuery'
@@ -13,16 +11,13 @@ module.exports = {
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.ProvidePlugin({
-      '$': 'jquery',
-      'jQuery': 'jquery'
-    })
+    new webpack.ProvidePlugin({'$': 'jquery', 'jQuery': 'jquery'})
   ],
   output: {
     path: path.join(__dirname, "public"),
     filename: 'bundle.js',
     sourceMapFilename: 'bundle.js.map',
-    devtoolModuleFilenameTemplate: function(info) {
+    devtoolModuleFilenameTemplate: function (info) {
       return "file:///" + info.absoluteResourcePath;
     }
   },
@@ -35,7 +30,7 @@ module.exports = {
       CountdownForm: path.resolve(__dirname, 'app/components/CountdownForm.jsx'),
       Controls: path.resolve(__dirname, 'app/components/Controls.jsx'),
       Clock: path.resolve(__dirname, 'app/components/Clock.jsx'),
-      applicationStyles: path.resolve(__dirname, 'app/styles/app.scss'),
+      applicationStyles: path.resolve(__dirname, 'app/styles/app.scss')
     },
     extensions: [".js", ".jsx"]
   },
@@ -48,6 +43,24 @@ module.exports = {
         },
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/
+      }, {
+        test: /\.scss$/,
+        use: [
+          {
+            loader: 'style-loader'
+          }, {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          }, {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              includePaths: [path.resolve(__dirname, 'node_modules/foundation-sites/scss')]
+            }
+          }
+        ]
       }
     ]
   },
