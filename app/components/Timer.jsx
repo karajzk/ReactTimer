@@ -4,33 +4,34 @@ var Controls = require('Controls');
 
 var Timer = React.createClass({
     getInitialState: function () {
-        return {count: 0, countdownStatus: 'paused'};
+        return {count: 0, countdownStatus: 'stopped'};
     },
     componentWillUnmount: function () {
         clearInterval(this.timer);
         this.timer = undefined;
 
     },
-    handleStatuschange(newStatus) {
-        if (this.state.countdownStatus !== newStatus) {
-            switch (newStatus) {
+    componentDidUpdate: function(prevProps, prevState) {
+        if (this.state.countdownStatus !== prevState.countdownStatus) {
+            switch (this.state.countdownStatus) {
                 case 'started':
                     this.timer = setInterval(() => {
                         var newCount = this.state.count + 1;
                         this.setState({count: newCount});
                     }, 1000);
-                    this.setState({countdownStatus: 'started'});
                     break;
                 case 'stopped':
                     this.setState({count: 0});
                 case 'paused':
                     clearInterval(this.timer);
                     this.timer = undefined;
-                    this.setState({countdownStatus: 'paused'});
                     break;
             }
         }
 
+    },
+    handleStatuschange(newStatus) {
+        this.setState({countdownStatus: newStatus});
     },
     render: function () {
         var {count, countdownStatus} = this.state;
